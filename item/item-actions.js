@@ -9,7 +9,7 @@ function addItem(req,res){
     })
     req.on("end", ()=>{
         const parsedItem = Buffer.concat(body).toString()
-        const newItem = JSON.parse(parsedItem);
+        let newItem = JSON.parse(parsedItem);
 
         //add new item to item list
         readItemList(((err,oldItems)=>{
@@ -19,6 +19,11 @@ function addItem(req,res){
                 res.end("Internal Server Error");
                 return;
             }
+            const lastItemId = oldItems.length
+            console.log("Last Item ID:", lastItemId);
+            newItem.id = lastItemId + 1; // Assign a new ID based on the length of the existing items
+
+            
             const newItems = [...oldItems, newItem];
             writeItemList(newItems, (err) => {
                 if (err) {
@@ -77,8 +82,7 @@ function deleteItem(req, res){
             return;
         }
 
-        const newItems = itemList.splice(itemIndex, 1)
-        
+        itemList.splice(itemIndex, 1)
 
         //Write to list
         writeItemList(itemList, (err) => {
@@ -97,9 +101,7 @@ function deleteItem(req, res){
 
 
     });
-       
-
-    })
+ })
    
 }
 function updateItem(req,res){
@@ -150,11 +152,30 @@ function updateItem(req,res){
     })
     
 }
-function getSingleId(req, res) {
+function getSingleItem(req, res) {
     const urlParts = req.url.split('/');
-    console.log(urlParts);
+    const itemId = urlParts[2]
+    readItemList((err, itemList) => {
+        if (err) {
+            console.error("Error reading item list:", err);
+            res.writeHead(500, { 'Content-Type': 'text/plain' });
+            res.end("Internal Server Error");
+            return;
+        }
+        const itemWanted = itemList.find(item=>item.id === itemId);
+        if (!itemWanted) {
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end("Item not found");
+            return;
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            message: "Item fetched successfully",
+            item: itemWanted
+            }));
+    })
+
   
-    
 }
 
 module.exports = {
@@ -162,5 +183,5 @@ module.exports = {
     getItems,
     updateItem,
     deleteItem,
-    getSingleId
+    getSingleItem
 };

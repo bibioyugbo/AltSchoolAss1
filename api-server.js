@@ -17,8 +17,8 @@ function requestHandler(req, res) {
     else if(req.method === "DELETE" && req.url === "/item"){
         Item.deleteItem(req,res)
     }
-    else if(req.method === "GET" && req.url === "/item/:id"){
-        Item.getSingleId(req,res)
+    else if(req.method === "GET" && req.url.includes("/item/")){
+        Item.getSingleItem(req,res)
     }
     else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
