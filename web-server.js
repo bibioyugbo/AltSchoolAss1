@@ -21,7 +21,7 @@ function requestHandler(req,res){
 const server = http.createServer(requestHandler)
 
 function displayWebPage(req,res){
-    console.log("Reading index.html...");
+   
     fs.readFile(simpleWebPagePath, 'utf-8', (err, data) => {
         if(err){
             console.log(err);

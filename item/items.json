@@ -1,4 +1,5 @@
 [
-  { "Name": "Ruler", "Price": "5k", "Size": "l" },
-  { "Name": "Notebook", "Price": "10k", "Size": "s" }
+  { "id": "1", "Name": "Ruler", "Price": "700k", "Size": "l" },
+  { "id": "3", "Name": "Rubber", "Price": "14k", "Size": "l" },
+  { "id": "4", "Name": "Cups", "Price": "300k", "Size": "l" }
 ]
